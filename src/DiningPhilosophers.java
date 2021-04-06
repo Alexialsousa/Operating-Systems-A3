@@ -39,19 +39,27 @@ public class DiningPhilosophers
 	 */
 	public static void main(String[] argv)
 	{
+		int iPhilosophers = 0;
 		try
 		{
-			/*
-			 * TODO:
-			 * Should be settable from the command line
-			 * or the default if no arguments supplied.
-			 */
 
-			int iPhilosophers;
-
-			// TODO check if argument is positive integer
 			if (!(argv.length == 0)) {
-				iPhilosophers = Integer.parseInt(argv[0]);
+
+				try {
+					iPhilosophers = Integer.parseInt(argv[0]);
+				}
+				catch(NumberFormatException e){
+					reportException(e);
+				}
+
+				if(iPhilosophers < 1){
+					System.out.println("Invalid number of philosophers");
+					System.exit(1);
+				}
+				if(iPhilosophers == 1){
+					System.out.println("The Philosopher starved to death since there is only 1 chopstick available.");
+					System.exit(1);
+				}
 			}
 			else {
 				iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
@@ -63,11 +71,7 @@ public class DiningPhilosophers
 			// Space for all the philosophers
 			Philosopher[] aoPhilosophers = new Philosopher[iPhilosophers];
 
-			System.out.println
-					(
-							iPhilosophers +
-									" philosopher(s) came in for a dinner."
-					);
+			System.out.println( iPhilosophers + " philosopher(s) came in for a dinner.");
 
 			// Let 'em sit down
 			for(int j = 0; j < iPhilosophers; j++)

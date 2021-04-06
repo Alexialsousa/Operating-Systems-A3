@@ -13,6 +13,7 @@ public class Philosopher extends BaseThread
 	 */
 	public static final long TIME_TO_WASTE = 1000;
 
+
 	/**
 	 * The act of eating.
 	 * - Print the fact that a given phil (their TID) has started eating.
@@ -25,11 +26,12 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + getTID() + " has started eating.");
+			DiningPhilosophers.soMonitor.philStates[getTID()] = "eating";
+			System.out.println("Philosopher " + (getTID()+1) + " has started eating.");
 			Thread.yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			Thread.yield();
-			System.out.println("Philosopher " + getTID() + " has finished eating.");
+			System.out.println("Philosopher " + (getTID()+1) + " has finished eating.");
 
 		}
 		catch(InterruptedException e)
@@ -50,12 +52,12 @@ public class Philosopher extends BaseThread
 	 */
 	public void think() {
 		try {
-
-			System.out.println("Philosopher " + getTID() + " has started thinking.");
+			DiningPhilosophers.soMonitor.philStates[getTID()] = "thinking";
+			System.out.println("Philosopher " + (getTID()+1) + " has started thinking.");
 			Thread.yield();
 			sleep((long) (Math.random() * TIME_TO_WASTE));
 			Thread.yield();
-			System.out.println("Philosopher " + getTID() + " has finished thinking.");
+			System.out.println("Philosopher " + (getTID()+1) + " has finished thinking.");
 
 		} catch (InterruptedException e) {
 			System.err.println("Philosopher.think():");
@@ -74,11 +76,13 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
-		System.out.println("Philosopher " + getTID() + " has started talking.");
+		DiningPhilosophers.soMonitor.philStates[getTID()] = "talking";
+		DiningPhilosophers.soMonitor.talking = true;
+		System.out.println("Philosopher " + (getTID()+1) + " has started talking.");
 		Thread.yield();
 		saySomething();
 		Thread.yield();
-		System.out.println("Philosopher " + getTID() + " has finished talking.");
+		System.out.println("Philosopher " + (getTID()+1) + " has finished talking.");
 	}
 
 	/**
@@ -86,8 +90,10 @@ public class Philosopher extends BaseThread
 	 */
 	public void run()
 	{
+
 		for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
 		{
+			DiningPhilosophers.soMonitor.philStates[getTID()] = "hungry";
 			DiningPhilosophers.soMonitor.pickUp(getTID());
 
 			eat();
@@ -104,12 +110,12 @@ public class Philosopher extends BaseThread
 
 			if(Math.round(Math.random() * 10) % 2 == 0)
 			{
-				// Some monitor ops down here...
+				DiningPhilosophers.soMonitor.requestTalk();
 				talk();
-				// ...
+				DiningPhilosophers.soMonitor.endTalk();
 			}
 
-			Thread.yield(); // I added thread here
+			Thread.yield();
 		}
 	} // run()
 

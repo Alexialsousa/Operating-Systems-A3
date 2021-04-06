@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 /**
  * Class Monitor
  * To synchronize dining philosophers.
@@ -6,19 +8,20 @@
  */
 public class Monitor
 {
-	/*
-	 * ------------
-	 * Data members
-	 * ------------
-	 */
 
+
+	static String[] philStates;
+	static boolean talking = false;
 
 	/**
 	 * Constructor
 	 */
 	public Monitor(int piNumberOfPhilosophers)
 	{
-		// TODO: set appropriate number of chopsticks based on the # of philosophers
+		philStates = new String[piNumberOfPhilosophers];
+		for(int i = 0; i< piNumberOfPhilosophers; i++){
+			philStates[i] = "thinking";
+		}
 	}
 
 	/*
@@ -33,7 +36,14 @@ public class Monitor
 	 */
 	public synchronized void pickUp(final int piTID)
 	{
-		// ...
+		// keeps looping if neighbour is eating
+		while( philStates[Math.floorMod(piTID-1, philStates.length)] == "eating" || philStates[Math.floorMod(piTID+1, philStates.length)] == "eating"){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -42,16 +52,23 @@ public class Monitor
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		// ...
+		//allow other threads to eat
+		notifyAll();
 	}
 
 	/**
-	 * Only one philopher at a time is allowed to philosophy
+	 * Only one philosopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
 	public synchronized void requestTalk()
 	{
-		// ...
+		if(talking){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -60,7 +77,8 @@ public class Monitor
 	 */
 	public synchronized void endTalk()
 	{
-		// ...
+		talking = false;
+		notifyAll();
 	}
 }
 
