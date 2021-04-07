@@ -39,7 +39,7 @@ public class DiningPhilosophers
 	 */
 	public static void main(String[] argv)
 	{
-		int iPhilosophers = 0;
+		int iPhilosophers = 1;
 		try
 		{
 
@@ -48,16 +48,18 @@ public class DiningPhilosophers
 				try {
 					iPhilosophers = Integer.parseInt(argv[0]);
 				}
-				catch(NumberFormatException e){
+				catch(IllegalArgumentException e){
 					reportException(e);
+					System.exit(1);
 				}
 
 				if(iPhilosophers < 1){
-					System.out.println("Invalid number of philosophers");
+					System.out.println(" \"" + iPhilosophers + "\"" +  " is not a positive decimal integer\n " +
+							"Usage: java DiningPhilosophers [NUMBER_OF_PHILOSOPHERS]");
 					System.exit(1);
 				}
 				if(iPhilosophers == 1){
-					System.out.println("The Philosopher starved to death since there is only 1 chopstick available.");
+					System.out.println("OOPS! The Philosopher starved to death since there is only 1 chopstick available.");
 					System.exit(1);
 				}
 			}
