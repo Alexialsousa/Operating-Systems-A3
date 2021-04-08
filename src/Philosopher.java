@@ -26,7 +26,7 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			DiningPhilosophers.soMonitor.philStates[getTID()] = "eating";
+			DiningPhilosophers.soMonitor.states[getTID()] = States.eating;
 			System.out.println("Philosopher " + (getTID()+1) + " has started eating.");
 			Thread.yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
@@ -52,7 +52,7 @@ public class Philosopher extends BaseThread
 	 */
 	public void think() {
 		try {
-			DiningPhilosophers.soMonitor.philStates[getTID()] = "thinking";
+			DiningPhilosophers.soMonitor.states[getTID()] = States.thinking;
 			System.out.println("Philosopher " + (getTID()+1) + " has started thinking.");
 			Thread.yield();
 			sleep((long) (Math.random() * TIME_TO_WASTE));
@@ -76,7 +76,7 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
-		DiningPhilosophers.soMonitor.philStates[getTID()] = "talking";
+		DiningPhilosophers.soMonitor.states[getTID()] = States.talking;
 		DiningPhilosophers.soMonitor.talking = true;
 		System.out.println("Philosopher " + (getTID()+1) + " has started talking.");
 		Thread.yield();
@@ -93,7 +93,6 @@ public class Philosopher extends BaseThread
 
 		for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
 		{
-			DiningPhilosophers.soMonitor.philStates[getTID()] = "hungry";
 			DiningPhilosophers.soMonitor.pickUp(getTID());
 
 			eat();
@@ -101,12 +100,6 @@ public class Philosopher extends BaseThread
 			DiningPhilosophers.soMonitor.putDown(getTID());
 
 			think();
-
-			/*
-			 * TODO:
-			 * A decision is made at random whether this particular
-			 * philosopher is about to say something terribly useful.
-			 */
 
 			if(Math.round(Math.random() * 10) % 2 == 0)
 			{
@@ -136,7 +129,7 @@ public class Philosopher extends BaseThread
 
 		System.out.println
 		(
-			"Philosopher " + getTID() + " says: " +
+			"Philosopher " + (getTID()+1) + " says: " +
 			astrPhrases[(int)(Math.random() * astrPhrases.length)]
 		);
 	}

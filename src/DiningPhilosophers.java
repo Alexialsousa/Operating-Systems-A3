@@ -39,10 +39,11 @@ public class DiningPhilosophers
 	 */
 	public static void main(String[] argv)
 	{
-		int iPhilosophers = 1;
+		int iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
 		try
 		{
 
+			// check if argument was made to change the number of philosophers
 			if (!(argv.length == 0)) {
 
 				try {
@@ -53,18 +54,18 @@ public class DiningPhilosophers
 					System.exit(1);
 				}
 
+				// if argument is an invalid integer
 				if(iPhilosophers < 1){
 					System.out.println(" \"" + iPhilosophers + "\"" +  " is not a positive decimal integer\n " +
 							"Usage: java DiningPhilosophers [NUMBER_OF_PHILOSOPHERS]");
 					System.exit(1);
 				}
+
+				// if argument is the invalid number 1
 				if(iPhilosophers == 1){
 					System.out.println("OOPS! The Philosopher starved to death since there is only 1 chopstick available.");
 					System.exit(1);
 				}
-			}
-			else {
-				iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
 			}
 
 			// Make the monitor aware of how many philosophers there are

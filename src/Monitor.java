@@ -1,4 +1,3 @@
-import org.w3c.dom.ls.LSOutput;
 
 /**
  * Class Monitor
@@ -10,7 +9,7 @@ public class Monitor
 {
 
 
-	static String[] philStates;
+	static States[] states;
 	static boolean talking = false;
 
 	/**
@@ -18,9 +17,11 @@ public class Monitor
 	 */
 	public Monitor(int piNumberOfPhilosophers)
 	{
-		philStates = new String[piNumberOfPhilosophers];
+		states = new States[piNumberOfPhilosophers];
+
+		// setting all philosophers to thinking
 		for(int i = 0; i< piNumberOfPhilosophers; i++){
-			philStates[i] = "thinking";
+			states[i] = States.thinking;
 		}
 	}
 
@@ -36,8 +37,11 @@ public class Monitor
 	 */
 	public synchronized void pickUp(final int piTID)
 	{
-		// keeps looping if neighbour is eating
-		while( philStates[Math.floorMod(piTID-1, philStates.length)] == "eating" || philStates[Math.floorMod(piTID+1, philStates.length)] == "eating"){
+		// set philosopher to a hungry state
+		states[piTID] = States.hungry;
+
+		// check if neighbours are eating before picking up both chopsticks
+		while( states[Math.floorMod(piTID-1, states.length)] == States.eating || states[Math.floorMod(piTID+1, states.length)] == States.eating){
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -52,7 +56,7 @@ public class Monitor
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		//allow other threads to eat
+		//signal other threads to eat
 		notifyAll();
 	}
 
@@ -62,6 +66,7 @@ public class Monitor
 	 */
 	public synchronized void requestTalk()
 	{
+		// wait if someone else is talking
 		if(talking){
 			try {
 				wait();
