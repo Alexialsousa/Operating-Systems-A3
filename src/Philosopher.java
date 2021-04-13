@@ -91,8 +91,10 @@ public class Philosopher extends BaseThread
 	public void run()
 	{
 
+
 		for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
 		{
+
 			DiningPhilosophers.soMonitor.pickUp(getTID());
 
 			eat();

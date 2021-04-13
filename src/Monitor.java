@@ -11,6 +11,7 @@ public class Monitor
 
 	static States[] states;
 	static boolean talking = false;
+	int lastToEat = -1;
 
 	/**
 	 * Constructor
@@ -40,6 +41,16 @@ public class Monitor
 		// set philosopher to a hungry state
 		states[piTID] = States.hungry;
 
+		// check if last philosopher to eat wants to eat again and wait thread to prevent starvation
+		if(lastToEat == piTID) {
+			System.out.println("Philosopher " + (piTID + 1) + " just ate!! No eating twice in a row");
+			try {
+				wait(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
 		// check if neighbours are eating before picking up both chopsticks
 		while( states[Math.floorMod(piTID-1, states.length)] == States.eating || states[Math.floorMod(piTID+1, states.length)] == States.eating){
 			try {
@@ -48,6 +59,7 @@ public class Monitor
 				e.printStackTrace();
 			}
 		}
+		lastToEat = piTID;
 	}
 
 	/**
@@ -58,6 +70,7 @@ public class Monitor
 	{
 		//signal other threads to eat
 		notifyAll();
+		states[piTID] = States.thinking;
 	}
 
 	/**
